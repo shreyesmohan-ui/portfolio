@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 
 const EXPERIENCE_START_DATE = new Date('2021-11-01T00:00:00')
+const CASHFLOW_ATLAS_URL = 'https://github.com/shreyesmohan-ui/Cashflow-Atlas'
 
 function getExperienceYears(startDate = EXPERIENCE_START_DATE) {
   const now = new Date()
@@ -36,7 +37,7 @@ const profile = {
   phone: '+91 7828996337',
   location: 'Pune, India',
   linkedin: 'https://www.linkedin.com/in/shreyesmohanya',
-  github: '#',
+  github: 'https://github.com/shreyesmohan-ui',
   resume: '#',
 }
 
@@ -59,11 +60,20 @@ const metrics = [
 
 const projects = [
   {
+    title: 'Cashflow Atlas',
+    tag: 'Finance Dashboard',
+    description: 'A personal finance intelligence project that maps spending patterns, savings direction, and decision insights through a clean dashboard experience.',
+    stack: ['React', 'Dashboard UI', 'Finance Analytics', 'Charts', 'Clean Architecture'],
+    impact: 'Adds a real product-style showcase beyond generic portfolio cards.',
+    link: CASHFLOW_ATLAS_URL,
+  },
+  {
     title: 'AI-Enhanced Job Application Platform',
     tag: 'Microservices + GenAI',
     description: 'A production-style job application platform with candidate matching, resume analysis, recruiter insights, event-driven communication, observability, and AI orchestration.',
     stack: ['Spring Boot', 'Microservices', 'RabbitMQ', 'Docker', 'Kubernetes', 'AWS', 'OpenAI API', 'MCP', 'Vector Search'],
     impact: 'Positions AI as a real engineering layer, not just a chatbot wrapper.',
+    link: '#',
   },
   {
     title: 'Scalable E-commerce Platform',
@@ -71,6 +81,7 @@ const projects = [
     description: 'A full-stack commerce system with authentication, product catalog, cart, order management, API persistence, caching, Dockerized services, and cloud deployment.',
     stack: ['FastAPI', 'ReactJS', 'PostgreSQL', 'MySQL', 'Redis', 'Docker', 'Render', 'Netlify'],
     impact: 'Demonstrates end-to-end delivery from database and APIs to frontend and deployment.',
+    link: '#',
   },
   {
     title: 'Backend Performance Optimization Work',
@@ -78,6 +89,7 @@ const projects = [
     description: 'Optimized backend APIs through query tuning, caching, performance assessments, JMeter testing, CI validation, and release-focused engineering discipline.',
     stack: ['Java', 'Spring Boot', 'JMeter', 'SQL', 'Caching', 'TeamCity', 'Azure DevOps'],
     impact: 'Improved API response times by 30% and helped improve system efficiency.',
+    link: '#',
   },
   {
     title: 'FHIR-Based REST API Platform',
@@ -85,6 +97,7 @@ const projects = [
     description: 'Built HL7 FHIR-based REST APIs using Python and FastAPI for standardized data exchange between clinical systems.',
     stack: ['Python', 'FastAPI', 'HL7 FHIR', 'REST APIs', 'Healthcare Integration'],
     impact: 'Adds a rare domain edge while keeping the portfolio centered on strong software engineering.',
+    link: '#',
   },
 ]
 
@@ -216,7 +229,18 @@ export default function App() {
 
       <Section eyebrow="Projects" title="Project stories that show software development depth">
         <div id="projects" className="grid gap-5 md:grid-cols-2">
-          {projects.map((project) => <motion.article key={project.title} whileHover={{ y: -4 }} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-slate-950/40 backdrop-blur-xl transition hover:border-cyan-400/30 hover:bg-white/[0.06]"><div className="mb-4 flex items-center justify-between gap-4"><Badge>{project.tag}</Badge><ExternalLink size={18} className="text-slate-400" /></div><h3 className="text-xl font-bold text-white">{project.title}</h3><p className="mt-3 text-sm leading-7 text-slate-300">{project.description}</p><p className="mt-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-100">{project.impact}</p><div className="mt-5 flex flex-wrap gap-2">{project.stack.map((s) => <Badge key={s}>{s}</Badge>)}</div></motion.article>) }
+          {projects.map((project) => (
+            <motion.article key={project.title} whileHover={{ y: -4 }} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-slate-950/40 backdrop-blur-xl transition hover:border-cyan-400/30 hover:bg-white/[0.06]">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <Badge>{project.tag}</Badge>
+                <a href={project.link} target={project.link === '#' ? undefined : '_blank'} rel="noreferrer" aria-label={project.title} className="text-slate-400 transition hover:text-cyan-300"><ExternalLink size={18} /></a>
+              </div>
+              <h3 className="text-xl font-bold text-white">{project.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">{project.description}</p>
+              <p className="mt-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-3 text-sm text-cyan-100">{project.impact}</p>
+              <div className="mt-5 flex flex-wrap gap-2">{project.stack.map((s) => <Badge key={s}>{s}</Badge>)}</div>
+            </motion.article>
+          ))}
         </div>
       </Section>
 
