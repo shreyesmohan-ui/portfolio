@@ -1,5 +1,5 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useEffect, useMemo, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   ArrowRight,
   Mail,
@@ -16,10 +16,14 @@ import {
   Gauge,
   Boxes,
   TestTube2,
+  TerminalSquare,
+  Zap,
+  Layers3,
 } from 'lucide-react'
 
 const EXPERIENCE_START_DATE = new Date('2021-11-01T00:00:00')
 const CASHFLOW_ATLAS_URL = 'https://github.com/shreyesmohan-ui/Cashflow-Atlas'
+const techStack = ['Java', 'Spring Boot', 'Microservices', 'REST APIs', 'ReactJS', 'Python', 'FastAPI', 'Docker', 'Kubernetes', 'AWS', 'Redis', 'RabbitMQ', 'JMeter', 'CI/CD', 'OpenAI API', 'MCP Server', 'RAG']
 
 function getExperienceYears(startDate = EXPERIENCE_START_DATE) {
   const now = new Date()
@@ -38,7 +42,7 @@ const profile = {
   location: 'Pune, India',
   linkedin: 'https://www.linkedin.com/in/shreyesmohanya',
   github: 'https://github.com/shreyesmohan-ui',
-  resume: '#',
+  resume: 'https://docs.google.com/document/d/1-kHt4Ox7tEtGUhbua84OsWqcNZpEXMVq/edit?usp=drive_link&ouid=102690758665265746395&rtpof=true&sd=true',
 }
 
 const skills = [
@@ -135,6 +139,56 @@ const quickFacts = [
   { label: 'Approach', value: 'Reliable, measurable, production-ready' },
 ]
 
+const capabilities = [
+  {
+    title: 'Build production-grade backend systems',
+    text: 'Java, Spring Boot, REST APIs, microservices, and clean database design that scale under real traffic.',
+    bullets: ['API design', 'Caching', 'Performance tuning', 'Reliability'],
+  },
+  {
+    title: 'Ship AI-enabled product workflows',
+    text: 'Use MCP, OpenAI APIs, RAG concepts, and automation to make software smarter without losing engineering discipline.',
+    bullets: ['AI integrations', 'Vector search', 'Workflow automation', 'Developer tooling'],
+  },
+  {
+    title: 'Deliver full-stack with confidence',
+    text: 'Bridge frontend polish, backend logic, deployment, and release quality into one cohesive product experience.',
+    bullets: ['React', 'Cloud delivery', 'CI/CD', 'Production support'],
+  },
+]
+
+const heroHighlights = [
+  { icon: TerminalSquare, label: 'Production APIs' },
+  { icon: Zap, label: 'AI Automation' },
+  { icon: Layers3, label: 'Cloud Native' },
+]
+
+function MagneticGrid() {
+  return <div className="magnetic-grid" aria-hidden="true" />
+}
+
+function FloatingOrb({ activeSkill }) {
+  return (
+    <div className="orb-stage" aria-hidden="true">
+      <motion.div className="orb-chip" animate={{ y: [0, -6, 0], scale: [1, 1.04, 1] }} transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}>
+        {activeSkill}
+      </motion.div>
+      <motion.div className="orb" animate={{ rotateX: [0, 360], rotateY: [0, 360] }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}>
+        {Array.from({ length: 9 }).map((_, i) => <span key={i} style={{ transform: `rotateY(${i * 40}deg) translateZ(120px)` }} />)}
+      </motion.div>
+      <motion.div className="orb-core" animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}>
+        <div className="text-center">
+          <p className="text-[11px] uppercase tracking-[0.35em] text-cyan-100/90">{activeSkill}</p>
+          <p className="mt-1 text-[10px] text-cyan-100/70">my favorite kind of magic</p>
+        </div>
+      </motion.div>
+      <div className="orbit orbit-one" />
+      <div className="orbit orbit-two" />
+      <div className="orbit orbit-three" />
+    </div>
+  )
+}
+
 function Badge({ children }) {
   return <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">{children}</span>
 }
@@ -152,8 +206,28 @@ function Section({ eyebrow, title, children }) {
 }
 
 export default function App() {
+  const experienceYears = useMemo(() => getExperienceYears(), [])
+  const [activeSkill, setActiveSkill] = useState('Java')
+  const { scrollYProgress } = useScroll()
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveSkill((current) => techStack[(techStack.indexOf(current) + 1) % techStack.length])
+    }, 1100)
+    return () => clearInterval(id)
+  }, [])
+
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-200">
+    <main className="site-shell min-h-screen bg-slate-950 text-slate-200">
+      <motion.div className="scroll-progress" style={{ scaleX }} />
+      <MagneticGrid />
+      <div className="ambient ambient-a" />
+      <div className="ambient ambient-b" />
+      <div className="ambient ambient-c" />
+      <div className="pointer-events-none fixed left-1/2 top-[45%] z-0 -translate-x-1/2 -translate-y-1/2 opacity-95 md:top-[48%]">
+        <FloatingOrb activeSkill={activeSkill} />
+      </div>
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
         <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl" />
@@ -176,13 +250,13 @@ export default function App() {
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <Badge>Backend • Full-Stack • AI Automation • Cloud</Badge>
           <h1 className="mt-6 text-4xl font-black leading-tight text-white md:text-6xl">
-            Building scalable software systems that are fast, reliable, and production-ready.
+            Building <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-pink-300 bg-clip-text text-transparent">scalable software systems</span> that are fast, reliable, and impossible to ignore.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            I’m {profile.name}, a Software Engineer with {experienceYears}+ years of experience across backend development, full-stack applications, microservices, performance optimization, CI/CD, and AI-enabled developer workflows.
+            I’m {profile.name}, a backend-first Software Engineer with {experienceYears}+ years of experience building reliable APIs, full-stack products, and AI-enabled workflows — plus a rare healthcare/HL7 FHIR edge from the Varian ecosystem.
           </p>
           <p className="mt-4 max-w-xl rounded-2xl border border-cyan-400/20 bg-cyan-400/8 p-4 text-sm text-cyan-100 shadow-lg shadow-cyan-500/10">
-            I enjoy turning complex systems into clean, scalable products with measurable impact — especially where reliability, performance, and smart automation meet.
+            I help teams ship faster with measurable impact: cleaner APIs, stronger performance, smoother releases, and automation that actually reduces manual toil.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#projects" className="inline-flex items-center gap-2 rounded-2xl bg-cyan-300 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200">View Projects <ArrowRight size={18} /></a>
@@ -195,10 +269,12 @@ export default function App() {
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-xl">
-          <div className="rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-6">
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }} className="hero-visual-card relative overflow-visible rounded-[2rem] border border-cyan-400/20 bg-white/[0.06] p-6 shadow-[0_30px_80px_rgba(8,15,35,0.65)] backdrop-blur-2xl">
+          <div className="hero-sheen pointer-events-none absolute inset-0 rounded-[2rem]" />
+          <div className="absolute -top-10 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-cyan-400/20 blur-3xl" />
+          <div className="relative z-10 rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-6 shadow-inner shadow-cyan-500/5">
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-300/15 text-cyan-300"><Cpu /></div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300/20 via-violet-400/20 to-pink-400/20 text-cyan-100 shadow-lg shadow-cyan-500/10"><Cpu /></div>
               <div><p className="font-bold text-white">Engineering Profile</p><p className="text-sm text-slate-400">Backend-first developer with full-stack and AI automation depth</p></div>
             </div>
             <div className="grid gap-3">
@@ -209,7 +285,18 @@ export default function App() {
               ))}
             </div>
             <div className="mt-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/8 p-4 text-sm text-cyan-100">
-              Available for backend, full-stack, platform, and AI-enabled engineering roles.
+              Best fit for backend, full-stack, platform, and AI-enabled roles where reliability, performance, and clean delivery matter.
+            </div>
+            <div className="mt-6 rounded-2xl border border-cyan-400/20 bg-cyan-400/8 p-4 text-sm text-cyan-100 shadow-lg shadow-cyan-500/10">
+              Current focus: <span className="font-semibold text-white">{activeSkill}</span> • <span className="text-cyan-50/90">I debug faster than my coffee cools.</span>
+            </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {heroHighlights.map((item) => (
+                <div key={item.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-center text-xs text-slate-200 shadow-inner shadow-slate-950/40">
+                  <item.icon className="mx-auto mb-2 text-cyan-300" size={16} />
+                  {item.label}
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -244,11 +331,24 @@ export default function App() {
         </div>
       </Section>
 
+      <Section eyebrow="What I Bring" title="Practical value, not just buzzwords">
+        <div className="grid gap-5 md:grid-cols-3">
+          {capabilities.map((item, index) => (
+            <motion.article key={item.title} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="feature-card rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-slate-950/40 backdrop-blur-xl hover:border-cyan-400/30 hover:bg-white/[0.06]">
+              <p className="text-xs uppercase tracking-[0.25em] text-cyan-300">Value {index + 1}</p>
+              <h3 className="mt-3 text-xl font-bold text-white">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">{item.text}</p>
+              <div className="mt-5 flex flex-wrap gap-2">{item.bullets.map((bullet) => <span key={bullet} className="rounded-full border border-cyan-400/20 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-100">{bullet}</span>)}</div>
+            </motion.article>
+          ))}
+        </div>
+      </Section>
+
       <Section eyebrow="Skills" title="Development stack">
         <div id="skills" className="flex flex-wrap gap-3 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">{skills.map((skill) => <Badge key={skill}>{skill}</Badge>)}</div>
       </Section>
 
-      <Section eyebrow="Why Me" title="The engineering signal I want recruiters to see">
+      <Section eyebrow="Why Me" title="WHY ME: Strengths that set me apart">
         <div className="grid gap-5 md:grid-cols-3">
           {strengths.map((item) => <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6"><item.icon className="text-cyan-300" /><h3 className="mt-4 font-bold text-white">{item.title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{item.text}</p></div>)}
         </div>
