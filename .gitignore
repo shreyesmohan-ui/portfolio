@@ -1,2 +1,4 @@
 node_modules/
 dist/
+exception/
+.git-push.log
